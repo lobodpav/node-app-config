@@ -1,0 +1,30 @@
+{
+  "name": "app-config",
+  "version": "0.1.0",
+  "description": "Simple utility for Node.js to load configuration files depending on your environment",
+  "main": "./index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "config",
+    "environment"
+  ],
+  "author": {
+    "name": "Pavel Lobodinský",
+    "email": "pavel.lobo@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lobodpav/node-app-config.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lobodpav/node-app-config/issues?state=open"
+  },
+  "readme": "Simple utility for Node.js to load configuration files depending on your environment. For more info, please read README.md",
+  "readmeFilename": "README.md",
+  "license": "MIT",
+  "devDependencies": [
+    "mocha"
+  ]
+}
