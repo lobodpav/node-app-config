@@ -4,7 +4,7 @@
   "description": "Simple utility for Node.js to load configuration files depending on your environment",
   "main": "./index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "mocha --reporter spec test.js"
   },
   "keywords": [
     "config",
@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/lobodpav/node-app-config/issues?state=open"
   },
-  "readme": "Simple utility for Node.js to load configuration files depending on your environment. For more info, please read README.md",
+  "readme": "Simple utility for Node.js to load configuration files depending on your environment. For more info, read README.md",
   "readmeFilename": "README.md",
   "license": "MIT",
   "devDependencies": [
