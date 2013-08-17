@@ -4,7 +4,7 @@
   "description": "Simple utility for Node.js to load configuration files depending on your environment",
   "main": "./index.js",
   "scripts": {
-    "test": "mocha --reporter spec test.js"
+    "test": "mocha --reporter spec test/test.js"
   },
   "keywords": [
     "config",
