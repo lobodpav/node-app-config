@@ -29,6 +29,7 @@ Each environment is a separate directory of the same name. In the example above,
 Configuration files are stored within each environment directory and any sub-directory will be ignored.
 
 Configuration files located directly under `config/` directory are supported for two reasons:
+
 * They are loaded in case no execution environment is set
 * Allow you to use a build tool (Grunt for example) to assemble the right config files in the root of `config/` directory depending on which environment you are building a package for.
     * For example, for production packages, you may want to copy only the .js files of `config/prod/` into the package's `config/` directory
@@ -80,6 +81,7 @@ console.log('Log level:', config.log.fileLogConfig.level);
 
 All configuration options are available via the environment variables below.
 Some examples of how to set the environmental variables:
+
 * `NODE_ENV=dev  NODE_CONFIG_NO_HALT= node index.js`
 * `NODE_ENV=qa   NODE_CONFIG_DIR='/qa/config/path/' node index.js`
 * `NODE_ENV=prod NODE_CONFIG_LOG= NODE_CONFIG_DIR='/prod/config/path/' node index.js`
