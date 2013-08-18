@@ -14,7 +14,7 @@ describe(modName, function() {
         delete process.env.NODE_CONFIG_DIR;
         delete process.env.NODE_CONFIG_LOG;
         // prevent halting the app when config load fails to catch the error
-        process.env.NODE_CONFIG_HALT = false;
+        process.env.NODE_CONFIG_NO_HALT = true;
 
         // set current working directory of the process to the same dir as this script is located in
         // this allows to have tests their data in separate test directory
@@ -41,7 +41,7 @@ describe(modName, function() {
 
         it('should fail to load non-existing config for DEV environment in default directory', function() {
             process.env.NODE_ENV = 'dev';
-            var config= require(modFile);
+            var config = require(modFile);
             assert.notStrictEqual(config, null);
 
             config = config.blah;
@@ -52,18 +52,46 @@ describe(modName, function() {
             process.env.NODE_ENV = 'prod';
             process.env.NODE_CONFIG_DIR = processDir + '/config1';
 
-            var config= require(modFile);
+            var config = require(modFile);
             assert.strictEqual(config, null);
         });
 
-        it.skip('should halt the app on failure', function() {
+        it('should halt the app on failure', function() {
+            // make the NO_HALT undefined
+            delete process.env.NODE_CONFIG_NO_HALT;
+            // set the environment to non-existing one to get the app halted
+            process.env.NODE_ENV = 'blah';
+
+            var halted = false;
+            // backup the function definition
+            var exit = process.exit;
+
+            // mock the process.exit() function to catch its call
+            process.exit = function(code) {
+                halted = true;
+            }
+
+            require(modFile);
+
+            // restore the original definition
+            process.exit = exit;
+
+            assert.strictEqual(halted, true);
+        });
+
+        it('should not halt the app on failure', function() {
+            // set the environment to non-existing one to cause an error
+            process.env.NODE_ENV = 'blah';
+
+            var config = require(modFile);
+            assert.strictEqual(config, null);
         });
     });
 
     describe('successful require', function() {
         it('should load DB config for DEV environment in default directory', function() {
             process.env.NODE_ENV = 'dev';
-            var config= require(modFile);
+            var config = require(modFile);
             assert.notStrictEqual(config, null);
 
             config = config.db;
@@ -89,7 +117,7 @@ describe(modName, function() {
         it('should load DB config for default environment in /config1 directory', function() {
             process.env.NODE_CONFIG_DIR = processDir + '/config1';
 
-            var config= require(modFile);
+            var config = require(modFile);
             assert.notStrictEqual(config, null);
 
             config = config.db;
@@ -99,10 +127,42 @@ describe(modName, function() {
             assert.strictEqual(config.dbURI, 'mongodb://localhost:27017/dev-db-config1');
         });
 
-        it.skip('should print out log information', function() {
+        it('should print out log information', function() {
+            process.env.NODE_CONFIG_LOG = true;
+
+            var log = false;
+            // backup the functions' definition
+            var err = console.error;
+            var info = console.info;
+
+            // mocks to catch logging attempts
+            console.error = console.info = function() {log = true;}
+
+            require(modFile);
+
+            // restore the functions' definition
+            console.error = err;
+            console.info = info;
+
+            assert.strictEqual(log, true);
         });
 
-        it.skip('should not print out log information', function() {
+        it('should not print out log information', function() {
+            var log = false;
+            // backup the functions' definition
+            var err = console.error;
+            var info = console.info;
+
+            // mocks to catch logging attempts
+            console.error = console.info = function() {log = true;}
+
+            require(modFile);
+
+            // restore the functions' definition
+            console.error = err;
+            console.info = info;
+
+            assert.strictEqual(log, false);
         });
     });
 });

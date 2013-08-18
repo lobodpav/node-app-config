@@ -79,8 +79,10 @@ console.log('Log level:', config.log.fileLogConfig.level);
 # Configuration options
 
 All configuration options are available via the environment variables below.
-An example of how to set the environmental variables: `NODE_ENV=dev NODE_CONFIG_HALT=false node index.js`
-
+Some examples of how to set the environmental variables:
+* `NODE_ENV=dev  NODE_CONFIG_NO_HALT= node index.js`
+* `NODE_ENV=qa   NODE_CONFIG_DIR='/qa/config/path/' node index.js`
+* `NODE_ENV=prod NODE_CONFIG_LOG= NODE_CONFIG_DIR='/prod/config/path/' node index.js`
 
 ### NODE_ENV
 
@@ -91,17 +93,17 @@ Environment to be used when requiring the tool. In our example, we have `dev` an
 Configuration directory is expected to be called 'config' and to be located in the root of your app/project.
 You can change this default behavior by setting this option up to whatever path you like.
 
-### NODE_CONFIG_HALT
+### NODE_CONFIG_NO_HALT
 
-If an error occurs during the load of config files, the app is halted unless overridden by setting this option to `false`.
+If an error occurs during the load of config files, the app is halted unless overridden by defining this option to whatever value.
 For example, the app is halted if the configuration directory does not exist, if an environment does not exist in `config` directory, etc.
 
-The app is being halted by executing `process.exit(-1)` command. If the halt is prevented by setting this option to `false`,
+The app is being halted by executing `process.exit(-1)` command. If the halt is prevented by defining this option,
 the returned value by the `require` call is `null` and it is up to you to handle this situation.
 
 ### NODE_CONFIG_LOG
 
-Prints out information and error messages into console if set to `true`.
+Prints out information and error messages into console if defined.
 
 # Technical details
 

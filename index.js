@@ -1,48 +1,5 @@
 'use strict';
 
-/**
- * SYNCHRONOUS configuration wrapper module to ensure the correct kind of configuration is loaded depending on environment being run at.
- * The environment is to be set in the NODE_ENV environmental property. Example startup command: NODE_ENV=prod node index.js
- * As Node.js caches all the requires, so this module will be executed only ones ensuring no performance impact on the app.
- *
- * Available configurations and environments are determined dynamically, based on the following directory and file structures.
- * The only supported configuration files are with '.js' extension, and must be exported this way:
- * module.exports = {
- *     property1: 'value1',
- *     property2: 'value2',
- *     ...
- * }
- *
- * Other configuration options via environment variables:
- *   NODE_CONFIG_DIR
- *     Configuration directory is expected to be called 'config' and to be located in the root of your app/project.
- *     You can change the default 'config' directory location by setting up NODE_CONFIG_DIR.
- *
- *   NODE_CONFIG_HALT
- *     If an error occurs during the load of config files, the app is halted unless overridden by setting to true.
- *     If HALT is prevented, module.exports is set to null.
- *
- *   NODE_CONFIG_LOG
- *     Prints out information and error messages into console if set to true
- *
- *
- * Example:
- * When running Node.js by `NODE_ENV=test node index.js` command and having following directory structure
- *     config/dev/app.js
- *     config/dev/log.js
- *     config/test/app.js
- *     config/test/log.js
- * this object will be returned upon require call:
- * {
- *     app: require(CONFIG_DIR + 'test/app');
- *     log: require(CONFIG_DIR + 'test/log');
- * }
- *
- * Usage in a module:
- *     var cfg = require('config');
- *     db.connect(cfg.app.aProperty);
- */
-
 var fs   = require('fs');
 var path = require('path');
 
@@ -59,13 +16,10 @@ if (ENV === undefined || ENV === null || typeof ENV !== 'string')
     ENV = '';
 
 // halt the app in case of failure during configs' load
-// note: typeof process.env.NODE_CONFIG_HALT is always string even though used this way: process.env.NODE_CONFIG_HALT=false
-var HALT = process.env.NODE_CONFIG_HALT;
-HALT = HALT === undefined || HALT === null || HALT == true;
+var HALT = process.env.NODE_CONFIG_NO_HALT === undefined;
 
 // print out debug messages if enabled
-var LOG = process.env.NODE_CONFIG_LOG;
-LOG = !(LOG === undefined || LOG === null || LOG == false);
+var LOG = process.env.NODE_CONFIG_LOG !== undefined;
 
 /**
  * SYNCHRONOUSLY fetches all environments available. Generally, returns the list of sub-directories under the CONFIG_DIR.
