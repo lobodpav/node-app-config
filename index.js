@@ -22,7 +22,7 @@
  *     If an error occurs during the load of config files, the app is halted unless overridden by setting to true.
  *     If HALT is prevented, module.exports is set to null.
  *
- *   NODE_CONFIG_DEBUG
+ *   NODE_CONFIG_LOG
  *     Prints out information and error messages into console if set to true
  *
  *
@@ -64,15 +64,15 @@ var HALT = process.env.NODE_CONFIG_HALT;
 HALT = HALT === undefined || HALT === null || HALT == true;
 
 // print out debug messages if enabled
-var DEBUG = process.env.NODE_CONFIG_DEBUG;
-DEBUG = !(DEBUG === undefined || DEBUG === null || DEBUG == false);
+var LOG = process.env.NODE_CONFIG_LOG;
+LOG = !(LOG === undefined || LOG === null || LOG == false);
 
 /**
  * SYNCHRONOUSLY fetches all environments available. Generally, returns the list of sub-directories under the CONFIG_DIR.
  * @returns {Array} List of environments available or an empty array in case there is no environment sub-directory
  */
 function getEnvs() {
-    if (DEBUG)
+    if (LOG)
         console.info('Reading environments available in', path.resolve(CONFIG_DIR));
 
     var stat;
@@ -96,7 +96,7 @@ function getEnvs() {
 function getConfigs(env) {
     var dir = CONFIG_DIR + env;
 
-    if (DEBUG)
+    if (LOG)
         console.info('Reading configuration files under', dir);
 
     var configs = [];
@@ -131,10 +131,10 @@ function getConfigs(env) {
 
 // check for existence of configuration directory
 if (!fs.existsSync(CONFIG_DIR)) {
-    if (DEBUG)
+    if (LOG)
         console.error('Configuration directory for the app is missing. Expected location is \'%s\'.', CONFIG_DIR);
     if (HALT) {
-        if (DEBUG)
+        if (LOG)
             console.error('Halting the app.');
         process.exit(-1);
     } else {
@@ -147,21 +147,21 @@ var configs = [];
 // if no environment was specified, load the configuration directly under config/ directory
 // this is required for production and test releases as the config/ directory does not contain environment directories but rather the correct config files themselves
 if (ENV === '') {
-    if (DEBUG)
+    if (LOG)
         console.info('Loading app configuration');
     configs = getConfigs('');
 }
 else {
-    if (DEBUG)
+    if (LOG)
         console.info('Loading app configuration for the \'%s\' environment', ENV);
 
     var envs = getEnvs();
     var e = envs.indexOf(ENV);
     if (e < 0) {
-        if (DEBUG)
+        if (LOG)
             console.error('Configuration for \'%s\' environment is not available. Expected location is %s/*.js.', ENV, CONFIG_DIR + ENV);
         if (HALT) {
-            if (DEBUG)
+            if (LOG)
                 console.error('Halting the app.');
             process.exit(-1);
         } else {

@@ -12,10 +12,9 @@ describe(modName, function() {
         // reset node variables to defaults
         delete process.env.NODE_ENV;
         delete process.env.NODE_CONFIG_DIR;
-        delete process.env.NODE_CONFIG_DEBUG;
+        delete process.env.NODE_CONFIG_LOG;
         // prevent halting the app when config load fails to catch the error
         process.env.NODE_CONFIG_HALT = false;
-//        process.env.NODE_CONFIG_DEBUG = true;
 
         // set current working directory of the process to the same dir as this script is located in
         // this allows to have tests their data in separate test directory
@@ -56,6 +55,9 @@ describe(modName, function() {
             var config= require(modFile);
             assert.strictEqual(config, null);
         });
+
+        it.skip('should halt the app on failure', function() {
+        });
     });
 
     describe('successful require', function() {
@@ -95,6 +97,12 @@ describe(modName, function() {
             assert.notStrictEqual(config, null);
             assert.strictEqual(typeof config, 'object');
             assert.strictEqual(config.dbURI, 'mongodb://localhost:27017/dev-db-config1');
+        });
+
+        it.skip('should print out log information', function() {
+        });
+
+        it.skip('should not print out log information', function() {
         });
     });
 });
