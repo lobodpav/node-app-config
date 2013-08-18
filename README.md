@@ -28,7 +28,10 @@ config/
 Each environment is a separate directory of the same name. In the example above, we have two environments: `dev` and `prod`.
 Configuration files are stored within each environment directory and any sub-directory will be ignored.
 
-Configuration files located directly under `config/` directory are loaded in case no execution environment is set.
+Configuration files located directly under `config/` directory are supported for two reasons:
+* They are loaded in case no execution environment is set
+* Allow you to use a build tool (Grunt for example) to assemble the right config files in the root of `config/` directory depending on which environment you are building a package for.
+    * For example, for production packages, you may want to copy only the .js files of `config/prod/` into the package's `config/` directory
 
 # Configuration files' format
 
@@ -76,7 +79,7 @@ console.log('Log level:', config.log.fileLogConfig.level);
 # Configuration options
 
 All configuration options are available via the environment variables below.
-Example of how to set the environmental variables: `NODE_ENV=dev NODE_CONFIG_HALT=false node index.js`
+An example of how to set the environmental variables: `NODE_ENV=dev NODE_CONFIG_HALT=false node index.js`
 
 
 ### NODE_ENV
@@ -102,7 +105,7 @@ Prints out information and error messages into console if set to `true`.
 
 # Technical details
 
-This tool is fully synchronous. I.e. for all file operations SYNC Node.js versions are being used.
+This tool is fully synchronous. I.e. for all file operations, synchronous Node.js functions are being called.
 This is essential to have the config files loaded immediately upon `require` call.
 Since Node.js caches all `require` calls, this tool will be executed only ones ensuring no performance impact on the app.
 

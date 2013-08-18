@@ -22,7 +22,6 @@
   "bugs": {
     "url": "https://github.com/lobodpav/node-app-config/issues?state=open"
   },
-  "readme": "Simple utility for Node.js to load configuration files depending on your environment. For more info, read README.md",
   "readmeFilename": "README.md",
   "license": "MIT",
   "devDependencies": [
