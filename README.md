@@ -1,11 +1,13 @@
 # app-config
 
 Configuration-loader utility for `Node.js` to load different set of configuration files depending on your execution environment.
-Simply prepare your configuration files and call `require('app-config')`. Available configurations and environments are determined dynamically, based on the directory and file structures.
+
+Simply prepare your configuration files and call `require('app-config')`. Available configurations and environments are determined dynamically, based on your directory and file structures.
 
 # Introduction
 
 In Java environment, `classpath` is used to 'inject' paths of right configuration files.
+
 In Javascript world, there is nothing like `classpath`. This tool is here to solve your multi-environment configuration problem.
 
 # Directory structure
@@ -21,16 +23,16 @@ config/
         log.js
     db.js
     log.js
-  ...
+    ...
 ```
 Each environment is a separate directory of the same name. In the example above, we have two environments: `dev` and `prod`.
-Only configuration files are stored within each environment directory and any sub-directory will be ignored.
+Configuration files are stored within each environment directory and any sub-directory will be ignored.
 
 Configuration files located directly under `config/` directory are loaded in case no execution environment is set.
 
-# Configuration files
+# Configuration files' format
 
-JS only files are supported and they must export an object. Example `config/prod/log.js`:
+Javascript-only files are supported and they must export an object. Example `config/prod/log.js`:
 ```js
 module.exports = {
     emitErrors: true,
@@ -45,9 +47,9 @@ module.exports = {
 # Usage
 
 When calling `require('app-config')`, configuration files are loaded depending on the execution environment,
-which is being set by using environmental variables described a bit later on.
+which is being set by using environmental variables. More on that below.
 
-Returned object upon `require('app-config')` call for the example directory structure:
+Returned object upon `require` call for the example directory structure:
 ```js
 {
     log: {
@@ -64,7 +66,7 @@ Returned object upon `require('app-config')` call for the example directory stru
 }
 ```
 
-Example Node.js module:
+### Example usage in a Node.js module
 ```js
 var config = require('app-config');
 
@@ -74,33 +76,33 @@ console.log('Log level:', config.log.fileLogConfig.level);
 # Configuration options
 
 All configuration options are available via the environment variables below.
-Example of how to set the environment values: `NODE_ENV=dev NODE_CONFIG_HALT=false node index.js`
+Example of how to set the environmental variables: `NODE_ENV=dev NODE_CONFIG_HALT=false node index.js`
 
 
-## NODE_ENV
+### NODE_ENV
 
 Environment to be used when requiring the tool. In our example, we have `dev` and `prod`.
 
-## NODE_CONFIG_DIR
+### NODE_CONFIG_DIR
 
 Configuration directory is expected to be called 'config' and to be located in the root of your app/project.
 You can change this default behavior by setting this option up to whatever path you like.
 
-## NODE_CONFIG_HALT
+### NODE_CONFIG_HALT
 
-If an error occurs during the load of config files, the app is halted unless overridden by setting this option to `true`.
+If an error occurs during the load of config files, the app is halted unless overridden by setting this option to `false`.
 For example, the app is halted if the configuration directory does not exist, if an environment does not exist in `config` directory, etc.
 
-The app is being halted by executing `process.exit(-1)` command. If the halt is prevented by setting this option to `true`,
-the returned value by the require call is `null` and it is up to developer to handle this situation.
+The app is being halted by executing `process.exit(-1)` command. If the halt is prevented by setting this option to `false`,
+the returned value by the `require` call is `null` and it is up to you to handle this situation.
 
-## NODE_CONFIG_LOG
+### NODE_CONFIG_LOG
 
 Prints out information and error messages into console if set to `true`.
 
 # Technical details
 
-This tool is fully synchronous. I.e. for all file operations SYNC Node versions are being used.
+This tool is fully synchronous. I.e. for all file operations SYNC Node.js versions are being used.
 This is essential to have the config files loaded immediately upon `require` call.
 Since Node.js caches all `require` calls, this tool will be executed only ones ensuring no performance impact on the app.
 
@@ -123,4 +125,4 @@ Object returned by `require` call on our example directory structure above with 
 
 # Dependencies
 
-The tool does not depend on any other code for common users. For developers, Mocha is the only dependency for running unit tests.
+The tool does not depend on any other code. For developers of this tool, Mocha is the only dependency for running unit tests.
