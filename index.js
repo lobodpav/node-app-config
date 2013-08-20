@@ -45,7 +45,7 @@ function getEnvs() {
 /**
  * SYNCHRONOUSLY fetches all config files under the environment specified in parameter. Currently, only .js files are supported.
  * @param {String} env The environment to search in for config files
- * @returns {Array} List of configuration files as object with name and path. I.e. for 'app.js' file this array of objects will get returned: [{name: 'app', path: '/app/root/config/app.js'}]
+ * @returns {Array} List of configuration files as an object with name and path. I.e. for 'app.js' file this array of objects will get returned: [{name: 'app', path: '/app/root/config/app.js'}]
  */
 function getConfigs(env) {
     var dir = CONFIG_DIR + env;
@@ -83,7 +83,7 @@ function getConfigs(env) {
 // ---
 
 
-// check for existence of configuration directory
+// check for non-existence of configuration directory
 if (!fs.existsSync(CONFIG_DIR)) {
     if (LOG)
         console.error('Configuration directory for the app is missing. Expected location is \'%s\'.', CONFIG_DIR);
@@ -99,7 +99,7 @@ if (!fs.existsSync(CONFIG_DIR)) {
 
 var configs = [];
 // if no environment was specified, load the configuration directly under config/ directory
-// this is required for production and test releases as the config/ directory does not contain environment directories but rather the correct config files themselves
+// this is required for production and test releases as the config/ directory does not contain environment directories but rather the appropriate config files themselves
 if (ENV === '') {
     if (LOG)
         console.info('Loading app configuration');
@@ -131,7 +131,7 @@ else {
 // all configs will be added as a property into this object
 var cfg = {};
 
-// add all configurations available into the object being returned by require('config') call
+// add all configurations available into the object being returned by require('app-config') call
 configs.forEach(function(val, index, arr) {
     cfg[val.name] = require(val.path);
 });

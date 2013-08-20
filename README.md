@@ -133,3 +133,11 @@ Object returned by `require` call on our example directory structure above with 
 # Dependencies
 
 The tool does not depend on any other code. For developers of this tool, Mocha is the only dependency for running unit tests.
+
+# Development
+
+In order to develop this plugin, these steps are required:
+* Clone the git repo by running `git clone URL`
+* Go to the newly created directory in Terminal
+* Run `npm install` to download dependencies
+* Run unit tests by `npm test`

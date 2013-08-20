@@ -13,11 +13,11 @@ describe(modName, function() {
         delete process.env.NODE_ENV;
         delete process.env.NODE_CONFIG_DIR;
         delete process.env.NODE_CONFIG_LOG;
-        // prevent halting the app when config load fails to catch the error
+        // prevent halting the app when config load fails, to catch the error
         process.env.NODE_CONFIG_NO_HALT = true;
 
         // set current working directory of the process to the same dir as this script is located in
-        // this allows to have tests their data in separate test directory
+        // this allows to have tests and their data in a dedicated directory
         process.chdir(processDir);
 
         // delete require cache to enforce reloading the index.js
