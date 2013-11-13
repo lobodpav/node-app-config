@@ -85,11 +85,10 @@ function getConfigs(env) {
 
 // check for non-existence of configuration directory
 if (!fs.existsSync(CONFIG_DIR)) {
-    if (LOG)
-        console.error('Configuration directory for the app is missing. Expected location is \'%s\'.', CONFIG_DIR);
+    if (LOG || HALT) // always print the error if halting the app
+        console.error('Configuration directory for the app is missing. Expected location is', CONFIG_DIR);
     if (HALT) {
-        if (LOG)
-            console.error('Halting the app.');
+        console.error('Halting the app.');
         process.exit(-1);
     } else {
         module.exports = null;
@@ -112,11 +111,10 @@ else {
     var envs = getEnvs();
     var e = envs.indexOf(ENV);
     if (e < 0) {
-        if (LOG)
-            console.error('Configuration for \'%s\' environment is not available. Expected location is %s/*.js.', ENV, CONFIG_DIR + ENV);
+        if (LOG || HALT) // always print the error if halting the app
+            console.error('Configuration for \'%s\' environment is not available. Expected location is %s/*.js', ENV, CONFIG_DIR + ENV);
         if (HALT) {
-            if (LOG)
-                console.error('Halting the app.');
+            console.error('Halting the app.');
             process.exit(-1);
         } else {
             module.exports = null;
@@ -135,5 +133,8 @@ var cfg = {};
 configs.forEach(function(val, index, arr) {
     cfg[val.name] = require(val.path);
 });
+
+if (LOG && configs.length <= 0)
+    console.warn('No configuration file found');
 
 module.exports = cfg;
