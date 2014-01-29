@@ -137,6 +137,7 @@ The tool does not depend on any other code. For developers of this tool, Mocha i
 # Development
 
 In order to develop this plugin, these steps are required:
+
 * Clone the git repo by running `git clone URL`
 * Go to the newly created directory in Terminal
 * Run `npm install` to download dependencies
