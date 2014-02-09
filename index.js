@@ -131,6 +131,13 @@ var cfg = {};
 
 // add all configurations available into the object being returned by require('app-config') call
 configs.forEach(function(val, index, arr) {
+    // delete the module from cache if in there
+    // this will ensure the files get reloaded every time this code is being run
+    // useful for unit tests which may delete the `app-config` module from cache to get the configs reloaded
+    var requireKey = require.resolve(val.path);
+    if (require.cache[requireKey])
+        delete require.cache[requireKey];
+
     cfg[val.name] = require(val.path);
 });
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var assert  = require('assert');
+var should  = require('should');
 var path    = require('path');
 var pkg     = require('../package.json');
 var modName = pkg.name;
@@ -29,23 +29,22 @@ describe(modName, function() {
             process.env.NODE_ENV = 'blah';
 
             var config = require(modFile);
-            assert.equal(config, null);
+            should(config).equal(null);
         });
 
         it('should fail to load configs in non-existing directory', function() {
             process.env.NODE_CONFIG_DIR = 'blah';
 
             var config = require(modFile);
-            assert.equal(config, null);
+            should(config).equal(null);
         });
 
         it('should fail to load non-existing config for DEV environment in default directory', function() {
             process.env.NODE_ENV = 'dev';
             var config = require(modFile);
-            assert.notStrictEqual(config, null);
+            should.exist(config);
 
-            config = config.blah;
-            assert.strictEqual(config, undefined);
+            should.not.exist(config.blah);
         });
 
         it('should fail to load DB config for PROD environment in /config1 directory', function() {
@@ -53,7 +52,7 @@ describe(modName, function() {
             process.env.NODE_CONFIG_DIR = processDir + '/config1';
 
             var config = require(modFile);
-            assert.strictEqual(config, null);
+            should(config).equal(null);
         });
 
         it('should halt the app on failure', function() {
@@ -65,18 +64,30 @@ describe(modName, function() {
             var halted = false;
             // backup the function definition
             var exit = process.exit;
+            // backup console functions' definition
+            var err = console.error;
+            var info = console.info;
+            var warn = console.warn;
 
             // mock the process.exit() function to catch its call
             process.exit = function(code) {
                 halted = true;
             }
 
+            // mocks to suppress logging attempts when HATL is being enabled
+            console.error = console.info = console.warn = function() {}
+
+
             require(modFile);
 
             // restore the original definition
             process.exit = exit;
+            // restore console functions' definition
+            console.error = err;
+            console.info = info;
+            console.warn = warn;
 
-            assert.strictEqual(halted, true);
+            halted.should.be.true;
         });
 
         it('should not halt the app on failure', function() {
@@ -84,7 +95,7 @@ describe(modName, function() {
             process.env.NODE_ENV = 'blah';
 
             var config = require(modFile);
-            assert.strictEqual(config, null);
+            should(config).equal(null);
         });
     });
 
@@ -92,39 +103,37 @@ describe(modName, function() {
         it('should load DB config for DEV environment in default directory', function() {
             process.env.NODE_ENV = 'dev';
             var config = require(modFile);
-            assert.notStrictEqual(config, null);
+            should.exist(config);
 
             config = config.db;
-            assert.notStrictEqual(config, undefined);
-            assert.notStrictEqual(config, null);
-            assert.strictEqual(typeof config, 'object');
-            assert.strictEqual(config.dbURI, 'mongodb://localhost:27017/dev-db');
+            should.exist(config);
+            config.should.be.an.Object;
+            config.should.have.a.property('dbURI', 'mongodb://localhost:27017/dev-db');
         });
 
         it('should load LOG config for PROD environment in default directory', function() {
             process.env.NODE_ENV = 'prod';
             var config = require(modFile);
-            assert.notStrictEqual(config, null);
+            should.exist(config);
 
             config = config.log;
-            assert.notStrictEqual(config, undefined);
-            assert.notStrictEqual(config, null);
-            assert.strictEqual(typeof config, 'object');
-            assert.strictEqual(config.fileLogConfig.filename, '/var/log/server-prod.log');
-            assert.strictEqual(config.consoleLogConfig.level, 'error');
+            should.exist(config);
+            config.should.be.an.Object;
+            config.should.have.properties('fileLogConfig', 'consoleLogConfig');
+            config.fileLogConfig.should.have.property('filename', '/var/log/server-prod.log');
+            config.consoleLogConfig.should.have.property('level', 'error');
         });
 
         it('should load DB config for default environment in /config1 directory', function() {
             process.env.NODE_CONFIG_DIR = processDir + '/config1';
 
             var config = require(modFile);
-            assert.notStrictEqual(config, null);
+            should.exist(config);
 
             config = config.db;
-            assert.notStrictEqual(config, undefined);
-            assert.notStrictEqual(config, null);
-            assert.strictEqual(typeof config, 'object');
-            assert.strictEqual(config.dbURI, 'mongodb://localhost:27017/dev-db-config1');
+            should.exist(config);
+            config.should.be.an.Object;
+            config.should.have.a.property('dbURI', 'mongodb://localhost:27017/dev-db-config1');
         });
 
         it('should print out log information', function() {
@@ -134,17 +143,19 @@ describe(modName, function() {
             // backup the functions' definition
             var err = console.error;
             var info = console.info;
+            var warn = console.warn;
 
             // mocks to catch logging attempts
-            console.error = console.info = function() {log = true;}
+            console.error = console.info = console.warn = function() {log = true;}
 
             require(modFile);
 
             // restore the functions' definition
             console.error = err;
             console.info = info;
+            console.warn = warn;
 
-            assert.strictEqual(log, true);
+            log.should.be.true;
         });
 
         it('should not print out log information', function() {
@@ -162,7 +173,26 @@ describe(modName, function() {
             console.error = err;
             console.info = info;
 
-            assert.strictEqual(log, false);
+            log.should.be.false;
+        });
+
+        it('should reload config files when `app-config` is deleted from `require.cache`', function() {
+            process.env.NODE_ENV = 'dev';
+
+            var config = require(modFile);
+            config.should.have.property('db');
+
+            // create new property
+            config.db.blah = 'blah!';
+            config.db.should.have.property('blah', 'blah!');
+
+            // delete the module from cache so that the `blah` property shall get removed upon new require call
+            delete require.cache[modFile];
+
+            // repeated require shall revert any previous changes made to the config
+            var config = require(modFile);
+            config.should.have.property('db');
+            config.db.should.not.have.property('blah');
         });
     });
 });

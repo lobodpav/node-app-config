@@ -10,6 +10,39 @@ In Java environment, `classpath` is used to 'inject' paths of right configuratio
 
 In Javascript world, there is nothing like `classpath`. This tool is here to solve your multi-environment configuration problem.
 
+# Quick intro to usage
+
+Create database config file for `dev` environment
+
+```
+/app_root/config/dev/db.js
+```
+
+Give the config file some content
+
+```js
+module.exports = {
+    hostname: 'localhost',
+    port: 1234
+}
+```
+
+Load the config in your app
+
+```js
+var config = require('app-config');
+
+console.log('DB URL:', config.db.hostname + ':' + config.db.port);
+```
+
+Run your app
+
+```bash
+NODE_ENV=dev node you_app.js
+```
+
+Like it? Read on for more details.
+
 # Directory structure
 
 An example of directory structure required by the tool.
@@ -26,7 +59,7 @@ config/
     ...
 ```
 Each environment is a separate directory of the same name. In the example above, we have two environments: `dev` and `prod`.
-Configuration files are stored within each environment directory and any sub-directory will be ignored.
+Configuration files are stored within each environment directory. Any sub-directory under an environment directory will be ignored.
 
 Configuration files located directly under `config/` directory are supported for two reasons:
 
@@ -126,13 +159,17 @@ Object returned by `require` call on our example directory structure above with 
 }
 ```
 
+Prior requiring the `db` and `log` modules above, they are deleted from `require.cache`.
+This will ensure reloading of config files if you intentionally deleted `app-config` module from `require.cache`.
+Useful for unit testing when playing around with properties in object returned upon `require('app-config')`.
+
 # Installation
 
 `npm install app-config`
 
 # Dependencies
 
-The tool does not depend on any other code. For developers of this tool, Mocha is the only dependency for running unit tests.
+The tool does not depend on any other code. For developers of this tool, `Mocha` and `Should` are the only dependencies for running unit tests.
 
 # Development
 
