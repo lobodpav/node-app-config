@@ -1,6 +1,6 @@
 {
   "name": "app-config",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Simple utility for Node.js to load configuration files depending on your environment",
   "main": "./index.js",
   "scripts": {
