@@ -194,5 +194,21 @@ describe(modName, function() {
             config.should.have.property('db');
             config.db.should.not.have.property('blah');
         });
+
+        it('should not reload config files when `app-config` is not deleted from `require.cache`', function() {
+            process.env.NODE_ENV = 'dev';
+
+            var config = require(modFile);
+            config.should.have.property('db');
+
+            // create new property
+            config.db.blah = 'blah!';
+            config.db.should.have.property('blah', 'blah!');
+
+            // repeated require shall not revert any previous changes made to the config
+            var config = require(modFile);
+            config.should.have.property('db');
+            config.db.should.have.property('blah', 'blah!');
+        });
     });
 });

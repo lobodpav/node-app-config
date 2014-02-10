@@ -1,3 +1,8 @@
+# 0.1.4 / 2014-02-10
+
+* Fixed devDependencies in package.json to contain version numbers
+* Added unit test for `app-config` reload feature in 0.1.2
+
 # 0.1.3 / 2014-02-10
 
 * Increased the version number due to publishing incorrect code as 0.1.2
