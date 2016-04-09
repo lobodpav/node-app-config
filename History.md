@@ -1,3 +1,7 @@
+# 0.1.5 / 2016-04-09
+
+* Updated to latest package versions
+
 # 0.1.4 / 2014-02-10
 
 * Fixed devDependencies in package.json to contain version numbers
