@@ -1,3 +1,9 @@
+# 1.0.0 / 2016-06-17
+
+* Replaced deprecated `fs.existsSync()` call by `fs.accessSync()`. `fs.existsSync()` was deprecated since Node.js v1.0.0.
+* Updated `mocha` and `should` dependencies
+* Proven stable enough to be finally called version 1.0.0
+
 # 0.1.5 / 2016-04-09
 
 * Updated to latest package versions

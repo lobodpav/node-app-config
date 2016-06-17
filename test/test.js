@@ -29,14 +29,14 @@ describe(modName, function() {
             process.env.NODE_ENV = 'blah';
 
             var config = require(modFile);
-            should(config).equal(null);
+            should(config).be.equal(null);
         });
 
         it('should fail to load configs in non-existing directory', function() {
             process.env.NODE_CONFIG_DIR = 'blah';
 
             var config = require(modFile);
-            should(config).equal(null);
+            should(config).be.equal(null);
         });
 
         it('should fail to load non-existing config for DEV environment in default directory', function() {
@@ -52,7 +52,7 @@ describe(modName, function() {
             process.env.NODE_CONFIG_DIR = processDir + '/config1';
 
             var config = require(modFile);
-            should(config).equal(null);
+            should(config).be.equal(null);
         });
 
         it('should halt the app on failure', function() {
@@ -70,12 +70,12 @@ describe(modName, function() {
             var warn = console.warn;
 
             // mock the process.exit() function to catch its call
-            process.exit = function(code) {
+            process.exit = function() {
                 halted = true;
-            }
+            };
 
             // mocks to suppress logging attempts when HATL is being enabled
-            console.error = console.info = console.warn = function() {}
+            console.error = console.info = console.warn = function() {};
 
 
             require(modFile);
@@ -87,7 +87,7 @@ describe(modName, function() {
             console.info = info;
             console.warn = warn;
 
-            halted.should.be.true;
+            halted.should.be.true();
         });
 
         it('should not halt the app on failure', function() {
@@ -95,7 +95,7 @@ describe(modName, function() {
             process.env.NODE_ENV = 'blah';
 
             var config = require(modFile);
-            should(config).equal(null);
+            should(config).be.equal(null);
         });
     });
 
@@ -107,8 +107,8 @@ describe(modName, function() {
 
             config = config.db;
             should.exist(config);
-            config.should.be.an.Object;
-            config.should.have.a.property('dbURI', 'mongodb://localhost:27017/dev-db');
+            config.should.be.an.Object();
+            config.should.have.property('dbURI', 'mongodb://localhost:27017/dev-db');
         });
 
         it('should load LOG config for PROD environment in default directory', function() {
@@ -118,7 +118,7 @@ describe(modName, function() {
 
             config = config.log;
             should.exist(config);
-            config.should.be.an.Object;
+            config.should.be.an.Object();
             config.should.have.properties('fileLogConfig', 'consoleLogConfig');
             config.fileLogConfig.should.have.property('filename', '/var/log/server-prod.log');
             config.consoleLogConfig.should.have.property('level', 'error');
@@ -132,8 +132,8 @@ describe(modName, function() {
 
             config = config.db;
             should.exist(config);
-            config.should.be.an.Object;
-            config.should.have.a.property('dbURI', 'mongodb://localhost:27017/dev-db-config1');
+            config.should.be.an.Object();
+            config.should.have.property('dbURI', 'mongodb://localhost:27017/dev-db-config1');
         });
 
         it('should print out log information', function() {
@@ -155,7 +155,7 @@ describe(modName, function() {
             console.info = info;
             console.warn = warn;
 
-            log.should.be.true;
+            log.should.be.true();
         });
 
         it('should not print out log information', function() {
@@ -173,7 +173,7 @@ describe(modName, function() {
             console.error = err;
             console.info = info;
 
-            log.should.be.false;
+            log.should.be.false();
         });
 
         it('should reload config files when `app-config` is deleted from `require.cache`', function() {

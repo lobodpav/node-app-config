@@ -25,7 +25,7 @@ var LOG = process.env.NODE_CONFIG_LOG !== undefined;
  * SYNCHRONOUSLY fetches all environments available. Generally, returns the list of sub-directories under the CONFIG_DIR.
  * @returns {Array} List of environments available or an empty array in case there is no environment sub-directory
  */
-function getEnvs() {
+function    getEnvs() {
     if (LOG)
         console.info('Reading environments available in', path.resolve(CONFIG_DIR));
 
@@ -84,9 +84,14 @@ function getConfigs(env) {
 
 
 // check for non-existence of configuration directory
-if (!fs.existsSync(CONFIG_DIR)) {
-    if (LOG || HALT) // always print the error if halting the app
-        console.error('Configuration directory for the app is missing. Expected location is', CONFIG_DIR);
+try {
+    fs.accessSync(CONFIG_DIR, fs.R_OK);
+}
+catch (e) {
+    if (LOG || HALT) { // always print the error if halting the app
+        console.error('Configuration directory for the app is either missing or non-readable. Expected location is', CONFIG_DIR);
+        console.error(e);
+    }
     if (HALT) {
         console.error('Halting the app.');
         process.exit(-1);

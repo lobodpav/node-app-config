@@ -1,6 +1,6 @@
 {
     "name": "app-config",
-    "version": "0.1.5",
+    "version": "1.0.0",
     "description": "Simple utility for Node.js to load configuration files depending on your environment",
     "main": "./index.js",
     "scripts": {
@@ -22,10 +22,13 @@
     "bugs": {
         "url": "https://github.com/lobodpav/node-app-config/issues?state=open"
     },
+    "engines" : {
+        "node" : ">=6.1.0"
+    },
     "readmeFilename": "README.md",
     "license": "MIT",
     "devDependencies": {
-        "mocha": "~2.4.5",
-        "should": "~8.3.0"
+        "mocha": "~2.5.3",
+        "should": "~9.0.2"
     }
 }
