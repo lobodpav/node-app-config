@@ -1,3 +1,8 @@
+# ! CAUTION !
+
+This module is **not maintained anymore**.
+You can use https://app-config.dev instead.
+
 # app-config
 
 Configuration-loader utility for `Node.js` to load different set of configuration files depending on your execution environment.

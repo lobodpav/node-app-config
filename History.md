@@ -1,3 +1,7 @@
+# 1.0.1 / 2021-07-18
+
+* Deprecated the whole module. It's not maintained anymore.
+
 # 1.0.0 / 2016-06-17
 
 * Replaced deprecated `fs.existsSync()` call by `fs.accessSync()`. `fs.existsSync()` was deprecated since Node.js v1.0.0.
